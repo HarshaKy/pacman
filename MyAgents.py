@@ -27,3 +27,16 @@ class GoWestAgent(Agent):
             return api.makeMove(Directions.SOUTH, legal)
         else:
             return api.makeMove(Directions.STOP, legal)
+
+class HungryAgent(Agent):
+    
+    def getAction(self, state):
+        food = api.food(state)
+        pacman = api.whereAmI(state)
+        walls = api.walls(state)
+
+        print "food: ", food
+        print "pacman: ", pacman
+        print "walls: ", walls
+
+        return api.makeMove(Directions.STOP, api.legalActions(state))
