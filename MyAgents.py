@@ -59,6 +59,50 @@ class HungryAgent(Agent):
             return random.choice(legal_actions)
 
 
+class SurvivalAgent(Agent):
+
+    def getAction(self, state):
+        legal = api.legalActions(state)
+        food = api.food(state)
+        pacman = api.whereAmI(state)
+        ghosts = api.ghosts(state)
+        walls = api.walls(state)
+
+        if self.ghost_nearby(pacman, ghosts):
+            return self.runAway(pacman, ghosts, walls, legal)
+        else:
+            return api.makeMove(random.choice(legal), legal)
+        
+    def ghost_nearby(self, pacman, ghosts):
+        for ghost in ghosts:
+            if util.manhattanDistance(pacman, ghost) < 3:
+                return True
+        return False
+    
+    def runAway(self, pacman, ghosts, walls, legal):
+        ghostDistance = {}
+        nearestGhost = None
+        for i in range(len(ghosts)):
+            ghostDistance[ghosts[i]] = util.manhattanDistance(pacman, ghosts[i])
+        
+        nearestGhost = min(ghostDistance, key=ghostDistance.get)
+
+        return self.direction(pacman, nearestGhost, walls, legal)
+    
+    def direction(self, pacman, nearestGhost, walls, legal):
+        if pacman[0] < nearestGhost[0] and Directions.WEST in legal:
+            return api.makeMove(Directions.WEST, legal)
+        elif pacman[0] > nearestGhost[0] and Directions.EAST in legal:
+            return api.makeMove(Directions.EAST, legal)
+        elif pacman[1] < nearestGhost[1] and Directions.SOUTH in legal:
+            return api.makeMove(Directions.SOUTH, legal)
+        elif pacman[1] > nearestGhost[1] and Directions.NORTH in legal:
+            return api.makeMove(Directions.NORTH, legal)
+        else:
+            print "random"
+            return api.makeMove(random.choice(legal), legal)
+
+
 
 class GoWestAgent(Agent):
 
