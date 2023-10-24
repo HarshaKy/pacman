@@ -28,7 +28,7 @@
 
 from pacman import Directions
 from game import Agent
-import api
+import api_v1 as api
 import random
 import game
 import util

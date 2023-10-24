@@ -2,7 +2,7 @@
 
 from pacman import Directions
 from game import Agent
-import api
+import api_v2 as api
 import random
 import game
 import util
@@ -157,3 +157,11 @@ class GoWestAgent(Agent):
 #             return api.makeMove(Directions.SOUTH, legal)
 #         else:
 #             return api.makeMove(random.choice(legal), legal)
+
+class CornerSeekingAgent(Agent):
+
+    def getAction(self, state):
+        corners = api.corners(state)
+
+        print corners
+        return api.makeMove(Directions.STOP, api.legalActions(state))
