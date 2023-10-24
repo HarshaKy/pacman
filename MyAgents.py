@@ -8,7 +8,7 @@ import game
 import util
 
 # GoWestAgent
-#
+# and other agents
 # Always goes West. For testing purposes.
 
 class HungryAgent(Agent):
