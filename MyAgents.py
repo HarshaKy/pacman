@@ -57,6 +57,10 @@ class HungryAgent(Agent):
             return Directions.SOUTH
         else:
             return random.choice(legal_actions)
+
+class SurvivalAgent(Agent):
+
+    def getAction(self, state):
         legal = api.legalActions(state)
         food = api.food(state)
         pacman = api.whereAmI(state)
@@ -97,8 +101,6 @@ class HungryAgent(Agent):
             print "random"
             return api.makeMove(random.choice(legal), legal)
 
-
-
 class GoWestAgent(Agent):
 
     def getAction(self, state):
@@ -115,43 +117,6 @@ class GoWestAgent(Agent):
             return api.makeMove(Directions.SOUTH, legal)
         else:
             return api.makeMove(Directions.STOP, legal)
-
-# class HungryAgent(Agent):
-    
-#     def getAction(self, state):
-#         food = api.food(state)
-#         pacman = api.whereAmI(state)
-#         walls = api.walls(state)
-
-#         # print "food: ", food
-#         # print "pacman: ", pacman
-#         # print "walls: ", walls
-
-#         nearestFood = self.nearestFood(food, pacman, walls, state)
-#         return api.makeMove(nearestFood, api.legalActions(state))
-    
-#     def nearestFood(self, food, pacman, walls, state):
-#         foodDistance = {}
-#         nearestFood = None
-#         for i in range(len(food)):
-#             foodDistance[food[i]] = util.manhattanDistance(pacman, food[i])
-        
-#         nearestFood = min(foodDistance, key=foodDistance.get)
-
-#         return self.direction(pacman, nearestFood, walls, state)
-    
-#     def direction(self, pacman, nearestFood, walls, state):
-#         legal = api.legalActions(state)
-#         if pacman[0] < nearestFood[0] and Directions.EAST in legal:
-#             return api.makeMove(Directions.EAST, legal)
-#         elif pacman[0] > nearestFood[0] and Directions.WEST in legal:
-#             return api.makeMove(Directions.WEST, legal)
-#         elif pacman[1] < nearestFood[1] and Directions.NORTH in legal:
-#             return api.makeMove(Directions.NORTH, legal)
-#         elif pacman[1] > nearestFood[1] and Directions.SOUTH in legal:
-#             return api.makeMove(Directions.SOUTH, legal)Directions
-#         else:
-#             return api.makeMove(random.choice(legal), legal)
 
 class CornerSeekingAgent(Agent):
 
