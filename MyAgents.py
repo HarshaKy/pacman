@@ -19,6 +19,7 @@ class HungryAgent(Agent):
         walls = api.walls(state)
 
         nearest_food = self.nearestFood(pacman, food, walls, api.legalActions(state))
+        print "nearest food: ", nearest_food
         return self.direction(pacman, nearest_food, api.legalActions(state))
 
     def nearestFood(self, pacman, food, walls, legal_actions):
@@ -56,6 +57,7 @@ class HungryAgent(Agent):
         elif dy < 0 and Directions.SOUTH in legal_actions:
             return Directions.SOUTH
         else:
+            print "random HUNGRY"
             return random.choice(legal_actions)
 
 class SurvivalAgent(Agent):
@@ -98,7 +100,7 @@ class SurvivalAgent(Agent):
         elif pacman[1] > nearestGhost[1] and Directions.NORTH in legal:
             return api.makeMove(Directions.NORTH, legal)
         else:
-            print "random"
+            print "random SURVIVOR"
             return api.makeMove(random.choice(legal), legal)
 
 class GoWestAgent(Agent):
@@ -183,71 +185,50 @@ class CornerSeekingAgent(Agent):
         elif pacman == coords['SE']:
             self.SE = True
 
-    # def __init__(self):
-    #     self.visited_corners = []
-    #     self.corners = []
-    #     self.last = None
-
-    # def getAction(self, state):
-    #     legal = api.legalActions(state)
-
-    #     if len(self.visited_corners) == 4:
-    #         return api.makeMove(Directions.STOP, legal)
-        
-    #     if not self.corners:
-    #         self.corners = api.corners(state)
-        
-    #     next_corner = self.corners[-1]
-    #     pacman = api.whereAmI(state)
-    #     walls = api.walls(state)
-
-    #     if self.pacman_in_corner(pacman, next_corner):
-    #         print "pacman in corner"
-    #         print "pacman: ", pacman
-    #         print "current corner: ", next_corner
-    #         self.visited_corners.append(next_corner)
-    #         self.corners.pop()
-    #         self.next_corner = self.corners[-1]
-    #         print "next corner: ", self.next_corner
-
-    #     return self.direction(pacman, next_corner, walls, legal)
-
-    # def pacman_in_corner(self, pacman, corner):
-    #     for c in [(corner[0] + 1, corner[1]), (corner[0] - 1, corner[1]),
-    #               (corner[0], corner[1] + 1), (corner[0], corner[1] - 1), (corner[0] + 1, corner[1] + 1), (corner[0] - 1, corner[1] - 1)]:
-    #         if c == pacman:
-    #             return True
-        
-    #     return False
-
-    # def direction(self, pacman, next_corner, walls, legal):
-    #     if pacman[0] < next_corner[0] and Directions.EAST in legal:
-    #         pick = Directions.EAST
-    #     elif pacman[0] > next_corner[0] and Directions.WEST in legal:
-    #         pick = Directions.WEST
-    #     elif pacman[1] < next_corner[1] and Directions.NORTH in legal:
-    #         pick = Directions.NORTH
-    #     elif pacman[1] > next_corner[1] and Directions.SOUTH in legal:
-    #         pick = Directions.SOUTH
-    #     else:
-    #         pick = self.goUpOrDown(pacman, next_corner, walls, legal)
-    #         print "pick: ", pick
- 
-    #     return api.makeMove(pick, legal)
+class HungrySurvivorAgent(Agent):
     
-    # def goUpOrDown(self, pacman, next_corner, walls, legal):
-    #     if Directions.NORTH in legal:
-    #         return Directions.NORTH
-    #     elif Directions.SOUTH in legal:
-    #         return Directions.SOUTH
-    #     else:
-    #         return self.goEastOrWest(pacman, next_corner, walls, legal)
-        
-    # def goEastOrWest(self, pacman, next_corner, walls, legal):
-    #     if Directions.EAST in legal:
-    #         return Directions.EAST
-    #     elif Directions.WEST in legal:
-    #         return Directions.WEST
-    #     else:
-    #         return Directions.STOP
-    # testing commit from new computer
+    def __init__(self):
+        self.hungry = HungryAgent()
+        self.survivor = SurvivalAgent()
+        self.hungry_mode = True
+        self.survivor_mode = False
+
+    def getAction(self, state):
+        pacman = api.whereAmI(state)
+        ghosts = api.ghosts(state)
+
+        if self.ghost_nearby(pacman, ghosts):
+            self.hungry_mode = False
+            self.survivor_mode = True
+        else:
+            self.hungry_mode = True
+            self.survivor_mode = False
+
+        mode = 'hungry' if self.hungry_mode else 'survivor'
+        print "mode: ", mode
+
+        if self.hungry_mode:
+            action = self.hungry.getAction(state)
+            if action == Directions.STOP:
+                self.hungry_mode = False
+                self.survivor_mode = True
+                return self.survivor.getAction(state)
+            else:
+                return action
+        elif self.survivor_mode:
+            action = self.survivor.getAction(state)
+            if action == Directions.STOP:
+                self.survivor_mode = False
+                self.hungry_mode = True
+                return self.hungry.getAction(state)
+            else:
+                return action
+        else:
+            print "stopping dont know what to do"
+            return api.makeMove(Directions.STOP, api.legalActions(state))
+           
+    def ghost_nearby(self, pacman, ghosts):
+        for ghost in ghosts:
+            if util.manhattanDistance(pacman, ghost) < 3:
+                return True
+        return False
