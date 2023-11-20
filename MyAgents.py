@@ -20,6 +20,11 @@ class HungryAgent(Agent):
 
         nearest_food = self.nearestFood(pacman, food, walls, api.legalActions(state))
         print "nearest food: ", nearest_food
+        
+        if nearest_food is None:
+            # return api.makeMove(Directions.STOP, api.legalActions(state))
+            return api.makeMove(random.choice(api.legalActions(state)), api.legalActions(state))
+        
         return self.direction(pacman, nearest_food, api.legalActions(state))
 
     def nearestFood(self, pacman, food, walls, legal_actions):
@@ -42,7 +47,7 @@ class HungryAgent(Agent):
                     open_set.append((neighbor, heuristic(neighbor)))
                     came_from[neighbor] = current
 
-        return pacman
+        return None
 
     def direction(self, current, next_food, legal_actions):
         dx = next_food[0] - current[0]
@@ -232,3 +237,7 @@ class HungrySurvivorAgent(Agent):
             if util.manhattanDistance(pacman, ghost) < 3:
                 return True
         return False
+
+class HungryCornerSeekingSurvivor(Agent):
+
+    None
