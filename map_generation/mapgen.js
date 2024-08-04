@@ -1185,34 +1185,40 @@ var getTiles = function() {
     return (tiles.join(""));
 };
 
-var num = argv.gen || 10;
+var num = argv.num || 10
+var corners = argv.corners || false
 
 for (var j=0; j<num; j++) {
     genRandom()
     tiles = getTiles()
 
-    tiles = tiles.replace(/-/g, " ");
-    tiles = tiles.replace(/_/g, " ");
-    tiles = tiles.replace(/PP/g, "P.");
+    tiles = tiles.replace(/-/g, " ")
+    tiles = tiles.replace(/_/g, " ")
+    tiles = tiles.replace(/PP/g, "P.")
 
-    var line = []
+    if (corners) {
+        tiles = tiles.replace(/\./g, ' ');
+        tiles = tiles.replace(/o/g, ' ');
+    }
+
+    var map = []
     i = 0;
     while (i < tiles.length) {
         var row = tiles.slice(i, i + 28)
         row = "%" + row.substring(1, row.length - 1) + "%"
-        line.push(row)
+        map.push(row)
         i += 28;
-
     }
 
-    for (var i = 0; i < line.length; i++) {
-        console.log(line[i]);
+    if (corners) {
+        map[1] = map[1][0] + '.' + map[1].substring(2, map[1].length - 2) + '.' + map[1][map[1].length - 1]
+        map[map.length - 2] = map[map.length - 2][0] + '.' + map[map.length - 2].substring(2, map[map.length - 2].length - 2) + '.' + map[map.length - 2][map[map.length - 2].length - 1]
     }
 
     const fs = require('fs');
 
     // Assuming 'rows' is your array of strings
-    const data = line.join('\n');
+    const data = map.join('\n');
 
     fs.writeFile(`../layouts/gen/${j}.lay`, data, (err) => {
         if (err) {
