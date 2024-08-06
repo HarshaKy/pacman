@@ -1,6 +1,9 @@
 from game import Actions
 import util
 
+# Returns the distance to the closest food pellet from the given position
+# Returns None if no food is reachable
+# implementation of the BFS algorithm
 def closestFood(pacman, food, walls):
     q = [(pacman[0], pacman[1], 0)]
     visited = set()
@@ -16,6 +19,14 @@ def closestFood(pacman, food, walls):
         for nx, ny in neighbors:
             q.append((nx, ny, distance+1))
     return None
+
+# Simple feature extractor
+# Returns a Counter object with the following features:
+# - bias: 1.0
+# - ghosts_1_step: number of ghosts 1 step away
+# - eat_food: 1.0 if the next position has food
+# - closest_food: distance to the closest food pellet
+# All features are normalized by dividing by 10.0
 
 class Simple:
 

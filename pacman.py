@@ -662,8 +662,24 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         print 'Scores:       ', ', '.join([str(score) for score in scores])
         print 'Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate)
         print 'Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins])
+        saveData(scores, wins, winRate)
 
     return games
+
+def saveData(scores, wins, winRate):
+    import csv, sys
+    args = sys.argv
+    human = False
+    filename = 'rl.csv'
+    for a in args:
+        if 'human' in a:
+            human = True
+        if 'MDP' in a:
+            filename = 'mdp.csv'
+    map = 'human' if human else 'generated'
+    with open(filename, 'a') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow([sum(scores) / float(len(scores)), winRate, map])
 
 if __name__ == '__main__':
     """

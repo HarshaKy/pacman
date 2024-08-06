@@ -4,6 +4,12 @@ from features import *
 
 import util, random
 
+# Abstract class for QLearning
+# The class has the following methods:
+# - getQValue: returns the QValue of a state-action pair
+# - calculateValue: returns the maximum QValue of a state
+# - calculateAction: returns the action with the maximum QValue
+# - update: updates the QValue using the QLearning update rule
 class QLearningAbstract(RLAgent):
 
     def __init__(self, **args):
@@ -32,6 +38,13 @@ class QLearningAbstract(RLAgent):
         newQ = (1 - self.alpha) * self.getQValue(state, action)
         newQ += self.alpha * (reward + (self.discount * self.calculateValue(nextState)))
     
+# QLearningAgent class
+# The class has the following methods:
+# - getWeights: returns the weights of the features
+# - getQValue: returns the QValue of a state-action pair
+# - update: updates the weights using the QLearning update rule
+# - getAction: returns the action to take
+# - final: called at the end of the training
 class QLearningAgent(QLearningAbstract):
 
     def __init__(self, extractor='Simple', epsilon=0.5, gamma=0.8, alpha=0.2, numTraining=0, **args):

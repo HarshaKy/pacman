@@ -1,37 +1,8 @@
-# mdpAgents.py
-# parsons/20-nov-2017
-#
-# Version 1
-#
-# The starting point for CW2.
-#
-# Intended to work with the PacMan AI projects from:
-#
-# http://ai.berkeley.edu/
-#
-# These use a simple API that allow us to control Pacman's interaction with
-# the environment adding a layer on top of the AI Berkeley code.
-#
-# As required by the licensing agreement for the PacMan AI we have:
-#
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
-
-# The agent here is was written by Simon Parsons, based on the code in
-# pacmanAgents.py
-
 import itertools
 from pacman import Directions
 from game import Agent
 import api_v6 as api
+import time
 import random
 import game
 import util
@@ -129,7 +100,7 @@ class MDPAgent(Agent):
     def __init__(self):
         print "Starting up MDPAgent!"
         name = "Pacman"
-
+        self.starttime = time.time()
         self.walls, self.grid = set(), set()
         self.rewards_map, self.states_map, self.utilities = {}, {}, {}
 
@@ -332,7 +303,6 @@ class MDPAgent(Agent):
     # Update dicts and lists when game ends
     #
     def final(self, state):
-        print "Looks like the game just ended!"
         self.walls, self.grid = [], []
         self.rewards_map, self.states_map, self.utilities = {}, {}, {}
 

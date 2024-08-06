@@ -1187,7 +1187,7 @@ var getTiles = function() {
 
 var num = argv.num || 10
 var corners = argv.corners || false
-
+folder = corners ? "corners" : "classic"
 for (var j=0; j<num; j++) {
     genRandom()
     tiles = getTiles()
@@ -1199,6 +1199,7 @@ for (var j=0; j<num; j++) {
     if (corners) {
         tiles = tiles.replace(/\./g, ' ');
         tiles = tiles.replace(/o/g, ' ');
+        tiles = tiles.replace(/G/g, ' ');
     }
 
     var map = []
@@ -1220,7 +1221,7 @@ for (var j=0; j<num; j++) {
     // Assuming 'rows' is your array of strings
     const data = map.join('\n');
 
-    fs.writeFile(`../layouts/gen/${j}.lay`, data, (err) => {
+    fs.writeFile(`../layouts/gen/${folder}/${j+1}.lay`, data, (err) => {
         if (err) {
             console.error('Error writing file:', err);
         } else {
