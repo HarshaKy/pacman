@@ -1,3 +1,9 @@
+// taken from https://github.com/shaunlebron/pacman-mazegen
+// Description: Generates a random map
+// This is the main script for generating maps for the game
+// Author: Shaun E. Williams (Shaun LeBron on GitHub)
+//
+
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
@@ -1185,6 +1191,10 @@ var getTiles = function() {
     return (tiles.join(""));
 };
 
+// modified the map generation function call to generate multiple maps
+// and write them to files.
+// 
+
 var num = argv.num || 10
 var corners = argv.corners || false
 folder = corners ? "corners" : "classic"
@@ -1192,16 +1202,23 @@ for (var j=0; j<num; j++) {
     genRandom()
     tiles = getTiles()
 
+    // replace ghost portals as this project doesn't support it
     tiles = tiles.replace(/-/g, " ")
     tiles = tiles.replace(/_/g, " ")
     tiles = tiles.replace(/PP/g, "P.")
 
+    // if the map is supposed to be for corner evaluation
+    // remove all pellets and energizers
+    // remove ghosts
     if (corners) {
         tiles = tiles.replace(/\./g, ' ');
         tiles = tiles.replace(/o/g, ' ');
         tiles = tiles.replace(/G/g, ' ');
     }
 
+    // convert the tiles to a map
+    // the tiles are a long string of characters representing the map
+    // we need to convert it to a 2D array of characters
     var map = []
     i = 0;
     while (i < tiles.length) {
@@ -1211,6 +1228,10 @@ for (var j=0; j<num; j++) {
         i += 28;
     }
 
+    // if map is for corners
+    // add food pellets only in the corners
+    // the game ends when pacman has eaten all the pellets
+    // placing the pellets in the corners will handle this
     if (corners) {
         map[1] = map[1][0] + '.' + map[1].substring(2, map[1].length - 2) + '.' + map[1][map[1].length - 1]
         map[map.length - 2] = map[map.length - 2][0] + '.' + map[map.length - 2].substring(2, map[map.length - 2].length - 2) + '.' + map[map.length - 2][map[map.length - 2].length - 1]

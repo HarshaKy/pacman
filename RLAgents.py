@@ -153,6 +153,6 @@ class RLAgent:
     def saveData(self, episodeTimes, totalTime):
         filename = 'rlagenttimes.csv'
         import csv
-        with open(filename, 'a') as csvfile:
+        with open(filename, 'ab') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow([totalTime/len(episodeTimes), totalTime])

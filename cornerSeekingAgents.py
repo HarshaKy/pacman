@@ -59,7 +59,7 @@ class CornerSeekingAgent(Agent):
                 human = True
         map = 'human' if human else 'generated'     
         walls = state.getWalls()
-        with open(filename, 'a') as file:
+        with open(filename, 'ab') as file:
             writer = csv.writer(file)
             writer.writerow([time.time() - self.starttime, len(self.actions), self.turns, map, float(self.turns)/float(walls.width)])
 

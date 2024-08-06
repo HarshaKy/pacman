@@ -677,7 +677,7 @@ def saveData(scores, wins, winRate):
         if 'MDP' in a:
             filename = 'mdp.csv'
     map = 'human' if human else 'generated'
-    with open(filename, 'a') as csvfile:
+    with open(filename, 'ab') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([sum(scores) / float(len(scores)), winRate, map])
 
